@@ -42,7 +42,7 @@ suspeitosRoutes.get("/", (req, res) => {
 suspeitosRoutes.post("/", (req, res) => {
   const { nome, profissao, aposta, suspeita } = req.body; 
   
-   // Validação dos campos nome eprofissao
+   // Validação dos campos nome e profissao
    if (!nome || !profissao) {
     return res.status(400).send({
       message: "O nome ou a profissao não foi preenchido!.",
@@ -74,4 +74,67 @@ suspeitosRoutes.post("/", (req, res) => {
     novoSuspeito,
   });
 });
+
+// Rota para buscar um suspeito pelo id
+suspeitosRoutes.get("/:id", (req, res) => {
+  const { id } = req.params;
+
+  
+  // Busca um suspeito pelo id no array de suspeitos
+  const suspeito = suspeitos.find((suspect) => suspect.id == id);
+
+// Verifica se o suspeito foi encontrado
+if (!suspeito) {
+  return res
+    .status(404)
+    .json({ message: `Suspeito com id ${id} não encontrado!` });
+}
+
+
+return res.status(200).json(suspeito);
+});
+
+// Rota para atualizar um suspeito pelo id
+suspeitosRoutes.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const {  nome, profissao, aposta, suspeita } = req.body;
+
+  // Busca um suspeito pelo id no array de suspeitos
+  const suspeito = suspeitos.find((suspect) => suspect.id == id);
+
+  
+  // Verifica se o suspeito foi encontrado
+  if (!suspeito) {
+    return res
+      .status(404)
+      .json({ message: `Suspeito com id ${id} não encontrado!` });
+  }
+  
+   // Validação dos campos nome e profissao
+   if (!nome || !profissao) {
+    return res.status(400).send({
+      message: "O nome ou o profissao não foi preenchido, criança aleatória!",
+    });
+  }
+
+  // Validação da suspeita
+  if (suspeita != "médio" && suspeita != "baixo" && suspeita != "alto") {
+    return res.status(400).send({
+      message:
+        "A suspeita deve ser classificado como baixo, médio ou alto!.!",
+    });
+  }
+
+  suspeito.nome = nome;
+  suspeito.profissao = profissao;
+  suspeito.aposta = aposta;
+  suspeito.suspeita = suspeita;
+
+  return res.status(200).json({
+    message: "suspeito atualizado com sucesso!",
+    suspeito,
+  });
+});
+
+
   export default suspeitosRoutes;
