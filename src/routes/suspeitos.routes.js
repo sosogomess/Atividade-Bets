@@ -124,7 +124,6 @@ suspeitosRoutes.put("/:id", (req, res) => {
         "A suspeita deve ser classificado como baixo, médio ou alto!.!",
     });
   }
-
   suspeito.nome = nome;
   suspeito.profissao = profissao;
   suspeito.aposta = aposta;
